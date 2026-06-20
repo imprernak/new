@@ -1,0 +1,809 @@
+/* ============================================================
+   GIFT REVEAL — stylesheet
+   Design tokens live as CSS variables in :root. Change the
+   palette / type by editing these — nothing else needs touching.
+   ============================================================ */
+
+:root {
+  /* --- color tokens --- */
+  --ink: #1b1023;          /* primary background, deep aubergine-black */
+  --ink-deep: #120a18;     /* darkest gradient stop */
+  --plum: #2d1b36;         /* secondary background */
+  --gold: #f7c948;         /* sunflower gold — primary accent */
+  --gold-soft: #f7c94833;  /* translucent gold for glows */
+  --amber: #c97b4a;        /* terracotta — secondary accent / warmth */
+  --cream: #f4ecd8;        /* card paper background */
+  --cream-dim: #e8dcc0;    /* card paper shadow tone */
+  --mauve: #9b8aa3;        /* muted supporting text on dark */
+  --text-ink: #2c2230;     /* primary text on cream */
+  --text-ink-soft: #5b4f60;/* secondary text on cream */
+
+  /* --- type tokens --- */
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-body: "Outfit", "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", monospace;
+
+  /* --- layout tokens --- */
+  --card-radius: 22px;
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: var(--font-body);
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--plum) 0%, var(--ink) 48%, var(--ink-deep) 100%);
+  color: var(--cream);
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* visible keyboard focus, kept throughout */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ============================================================
+   Ambient backdrop — soft drifting motes (canvas, lightweight)
+   ============================================================ */
+
+#ambient-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+/* ============================================================
+   Scene shell
+   ============================================================ */
+
+.scene {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 20px;
+}
+
+/* ============================================================
+   Scene 1 — the wrapped gift
+   ============================================================ */
+
+#scene-gift {
+  flex-direction: column;
+  gap: 28px;
+  text-align: center;
+  transition: opacity 0.7s var(--ease-soft), visibility 0.7s;
+}
+
+#scene-gift.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: fixed;
+}
+
+.gift-wrap {
+  position: relative;
+  width: clamp(180px, 38vw, 260px);
+  aspect-ratio: 1 / 1;
+  display: grid;
+  place-items: center;
+}
+
+.gift-glow {
+  position: absolute;
+  inset: -40%;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--gold-soft) 0%, transparent 68%);
+  animation: glow-pulse 3.6s ease-in-out infinite;
+  filter: blur(2px);
+}
+
+@keyframes glow-pulse {
+  0%, 100% { transform: scale(0.92); opacity: 0.55; }
+  50% { transform: scale(1.08); opacity: 0.95; }
+}
+
+.gift-button {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: 28px;
+  transition: transform 0.45s var(--ease-soft);
+}
+
+.gift-button:hover {
+  transform: translateY(-4px) scale(1.02);
+}
+
+.gift-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.gift-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* lid + ribbon + bow groups animate independently on open */
+.gift-lid,
+.gift-bow {
+  transform-origin: 100px 78px;
+  transition: transform 0.8s var(--ease-soft), opacity 0.6s ease;
+}
+
+.gift-base {
+  transform-origin: 100px 180px;
+  transition: transform 0.7s 0.05s var(--ease-soft), opacity 0.6s 0.05s ease;
+}
+
+.gift-wrap.is-opening .gift-lid {
+  transform: translate(6px, -64px) rotate(-18deg);
+  opacity: 0;
+}
+
+.gift-wrap.is-opening .gift-bow {
+  transform: translateY(-70px) scale(0.5);
+  opacity: 0;
+}
+
+.gift-wrap.is-opening .gift-base {
+  transform: scale(0.85) translateY(14px);
+  opacity: 0;
+}
+
+.gift-light-burst {
+  position: absolute;
+  inset: -20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff7df 0%, var(--gold-soft) 35%, transparent 70%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.gift-wrap.is-opening .gift-light-burst {
+  animation: light-burst 0.9s var(--ease-soft) forwards;
+}
+
+@keyframes light-burst {
+  0% { opacity: 0; transform: scale(0.3); }
+  40% { opacity: 0.9; }
+  100% { opacity: 0; transform: scale(2.1); }
+}
+
+.unwrap-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.unwrap-hint p {
+  font-family: var(--font-display);
+  font-size: clamp(1.05rem, 1.4vw + 0.7rem, 1.35rem);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--cream);
+  opacity: 0.92;
+  animation: hint-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes hint-breathe {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 0.95; }
+}
+
+.unwrap-hint span {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--mauve);
+}
+
+.gift-wrap.is-opening + .unwrap-hint,
+#scene-gift.is-opening .unwrap-hint {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* ============================================================
+   Sunflower signature — line-art bloom
+   ============================================================ */
+
+.sunflower-bloom {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: clamp(220px, 30vw, 340px);
+  height: clamp(220px, 30vw, 340px);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.sunflower-bloom.is-blooming {
+  opacity: 1;
+}
+
+.sunflower-bloom svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.sunflower-bloom path,
+.sunflower-bloom circle {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+}
+
+.sunflower-bloom.is-blooming path,
+.sunflower-bloom.is-blooming circle {
+  animation: draw-bloom 1.4s var(--ease-soft) forwards;
+}
+
+.sunflower-bloom.is-blooming .bloom-fade {
+  animation: draw-bloom 1.4s var(--ease-soft) forwards, fade-out-bloom 0.9s ease 1.5s forwards;
+}
+
+@keyframes draw-bloom {
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes fade-out-bloom {
+  to { opacity: 0; }
+}
+
+/* small static corner mark, reused on the card */
+.sunflower-mark {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+}
+
+.sunflower-mark path,
+.sunflower-mark circle {
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ============================================================
+   Scene 2 — the gift card
+   ============================================================ */
+
+#scene-card {
+  display: none;
+  padding: 48px 20px 60px;
+}
+
+#scene-card.is-visible {
+  display: flex;
+}
+
+.card {
+  width: min(440px, 100%);
+  background: linear-gradient(180deg, var(--cream) 0%, var(--cream-dim) 100%);
+  border-radius: var(--card-radius);
+  box-shadow:
+    0 30px 60px -20px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(247, 201, 72, 0.08),
+    0 0 80px -20px var(--gold-soft);
+  color: var(--text-ink);
+  opacity: 0;
+  transform: translateY(28px) scale(0.97);
+  animation: card-rise 0.9s var(--ease-soft) forwards;
+  animation-delay: 0.35s;
+  overflow: hidden;
+}
+
+@keyframes card-rise {
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 26px 28px 4px;
+}
+
+.card-eyebrow {
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2vw + 1rem, 1.85rem);
+  font-weight: 600;
+  line-height: 1.18;
+  padding: 6px 28px 18px;
+  letter-spacing: -0.01em;
+}
+
+/* --- note section --- */
+
+.note-section {
+  padding: 0 28px 22px;
+}
+
+.note-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.note-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-ink-soft);
+  font-weight: 600;
+}
+
+.note-edit-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--amber);
+  padding: 4px 9px;
+  border-radius: 100px;
+  transition: background 0.25s ease;
+}
+
+.note-edit-btn:hover {
+  background: rgba(201, 123, 74, 0.12);
+}
+
+.note-edit-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.note-body {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--text-ink);
+  white-space: pre-wrap;
+  border-radius: 12px;
+  padding: 2px 2px;
+  transition: background 0.25s ease, box-shadow 0.25s ease;
+}
+
+.note-body[contenteditable="true"] {
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 0 1.5px rgba(201, 123, 74, 0.35);
+  padding: 12px 14px;
+  outline: none;
+}
+
+/* --- perforated divider --- */
+
+.perforation {
+  position: relative;
+  height: 1px;
+  margin: 6px 0;
+  border-top: 1.5px dashed rgba(44, 34, 48, 0.22);
+}
+
+.perforation::before,
+.perforation::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 22px;
+  height: 22px;
+  background: var(--ink);
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+.perforation::before { left: -39px; }
+.perforation::after { right: -39px; }
+
+/* --- voucher section --- */
+
+.voucher-section {
+  padding: 20px 28px 22px;
+}
+
+.voucher-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.voucher-head .sunflower-mark {
+  width: 22px;
+  height: 22px;
+}
+
+.voucher-head span {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-ink-soft);
+  font-weight: 600;
+}
+
+.voucher-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(44, 34, 48, 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.voucher-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.voucher-field.full {
+  grid-column: 1 / -1;
+}
+
+.voucher-field dt {
+  font-size: 0.63rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-ink-soft);
+}
+
+.voucher-field dd {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  word-break: break-word;
+}
+
+.voucher-field dd.code {
+  font-size: 1.02rem;
+  color: var(--amber);
+}
+
+.copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: var(--ink);
+  color: var(--gold);
+  padding: 10px 16px;
+  border-radius: 100px;
+  transition: transform 0.25s var(--ease-soft), box-shadow 0.25s ease;
+}
+
+.copy-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.4);
+}
+
+.copy-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.copy-btn.is-copied {
+  color: var(--cream);
+}
+
+/* ============================================================
+   Music player
+   ============================================================ */
+
+.player-section {
+  padding: 22px 0 6px;
+  border-top: 1px solid rgba(44, 34, 48, 0.1);
+}
+
+.player-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 28px 14px;
+}
+
+.player-head span {
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-ink-soft);
+  font-weight: 600;
+}
+
+.playlist {
+  list-style: none;
+  max-height: 340px;
+  overflow-y: auto;
+  padding: 0 10px 8px;
+}
+
+.playlist::-webkit-scrollbar {
+  width: 5px;
+}
+
+.playlist::-webkit-scrollbar-thumb {
+  background: rgba(44, 34, 48, 0.18);
+  border-radius: 10px;
+}
+
+.track {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 8px;
+  border-radius: 14px;
+  transition: background 0.3s ease;
+}
+
+.track + .track {
+  margin-top: 2px;
+}
+
+.track.is-active {
+  background: rgba(247, 201, 72, 0.16);
+}
+
+.track-play {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--gold);
+  display: grid;
+  place-items: center;
+  transition: transform 0.25s var(--ease-out-back), background 0.25s ease;
+  flex-shrink: 0;
+}
+
+.track-play:hover {
+  transform: scale(1.07);
+}
+
+.track.is-active .track-play {
+  background: var(--amber);
+  color: var(--ink);
+}
+
+.track-play svg {
+  width: 14px;
+  height: 14px;
+}
+
+.track-play .icon-pause {
+  display: none;
+}
+
+.track.is-playing .track-play .icon-play {
+  display: none;
+}
+
+.track.is-playing .track-play .icon-pause {
+  display: block;
+}
+
+.track-body {
+  min-width: 0;
+}
+
+.track-meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.track-titles {
+  min-width: 0;
+}
+
+.track-title {
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-artist {
+  font-size: 0.74rem;
+  color: var(--text-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-time {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-ink-soft);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.track-progress {
+  position: relative;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(44, 34, 48, 0.12);
+  cursor: pointer;
+  touch-action: none;
+}
+
+.track-progress-fill {
+  position: absolute;
+  inset: 0;
+  width: 0%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--amber), var(--gold));
+  pointer-events: none;
+}
+
+.track-progress-handle {
+  position: absolute;
+  top: 50%;
+  left: 0%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 0 2px var(--cream);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.track:hover .track-progress-handle,
+.track.is-active .track-progress-handle {
+  opacity: 1;
+}
+
+/* --- card footer --- */
+
+.card-footer {
+  padding: 18px 28px 26px;
+  text-align: center;
+}
+
+.card-footer p {
+  font-size: 0.72rem;
+  color: var(--text-ink-soft);
+  letter-spacing: 0.04em;
+}
+
+.card-footer .sunflower-mark {
+  width: 20px;
+  height: 20px;
+  margin: 0 auto 8px;
+}
+
+/* ============================================================
+   Toast (copy confirmation)
+   ============================================================ */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translate(-50%, 16px);
+  background: var(--ink);
+  color: var(--gold);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 100px;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s var(--ease-soft);
+  z-index: 50;
+}
+
+.toast.is-visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+
+@media (max-width: 420px) {
+  .perforation::before { left: -29px; }
+  .perforation::after { right: -29px; }
+
+  .card-header,
+  .card-title,
+  .note-section,
+  .voucher-section,
+  .player-head,
+  .card-footer {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .voucher-grid {
+    grid-template-columns: 1fr 1fr;
+    padding: 14px;
+  }
+}
+
+@media (min-width: 720px) {
+  .card {
+    width: 480px;
+  }
+}
+
+/* ============================================================
+   Reduced motion
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

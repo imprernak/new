@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>For Muse 🌻</title>
+  <meta name="description" content="A little something for you." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%BB%3C/text%3E%3C/svg%3E" />
+
+  <!-- Type: Fraunces (display/note serif), Outfit (UI sans), JetBrains Mono (voucher code) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500;1,9..144,600&family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ambient floating motes, purely decorative -->
+  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+  <!-- ============================================================
+       SCENE 1 — wrapped gift
+       ============================================================ -->
+  <main id="scene-gift" class="scene">
+    <div class="gift-wrap" id="gift-wrap">
+      <div class="gift-glow" aria-hidden="true"></div>
+      <div class="gift-light-burst" aria-hidden="true"></div>
+
+      <button type="button" class="gift-button" id="gift-button" aria-label="Open your gift">
+        <svg class="gift-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="boxGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#46294f" />
+              <stop offset="100%" stop-color="#26152d" />
+            </linearGradient>
+            <linearGradient id="lidGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#553262" />
+              <stop offset="100%" stop-color="#3a2244" />
+            </linearGradient>
+          </defs>
+
+          <!-- base -->
+          <g class="gift-base">
+            <rect x="36" y="108" width="128" height="82" rx="10" fill="url(#boxGrad)" />
+            <rect x="92" y="108" width="16" height="82" fill="#f7c948" />
+            <rect x="36" y="108" width="128" height="82" rx="10" fill="none" stroke="#f7c94822" stroke-width="1" />
+          </g>
+
+          <!-- lid + bow -->
+          <g class="gift-lid">
+            <rect x="28" y="86" width="144" height="28" rx="12" fill="url(#lidGrad)" />
+            <rect x="28" y="96" width="144" height="10" fill="#f7c948" />
+            <rect x="92" y="86" width="16" height="28" fill="#f7c948" />
+          </g>
+          <g class="gift-bow">
+            <path d="M100,86 C92,70 70,68 60,78 C52,86 62,96 78,90 C88,86 96,88 100,86 Z" fill="#f7c948" stroke="#c97b4a" stroke-width="1" />
+            <path d="M100,86 C108,70 130,68 140,78 C148,86 138,96 122,90 C112,86 104,88 100,86 Z" fill="#f7c948" stroke="#c97b4a" stroke-width="1" />
+            <circle cx="100" cy="86" r="7" fill="#c97b4a" />
+            <path d="M96,90 L88,104 L96,100 Z" fill="#f7c948" />
+            <path d="M104,90 L112,104 L104,100 Z" fill="#f7c948" />
+          </g>
+        </svg>
+      </button>
+    </div>
+
+    <div class="unwrap-hint">
+      <p>For you, Muse</p>
+      <span>Tap to unwrap</span>
+    </div>
+  </main>
+
+  <!-- sunflower line-art bloom, plays once at the moment of opening -->
+  <div class="sunflower-bloom" id="sunflower-bloom" aria-hidden="true">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <g class="bloom-fade">
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(45 100 100)" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(90 100 100)" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(135 100 100)" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(180 100 100)" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(225 100 100)" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(270 100 100)" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(315 100 100)" style="stroke-dasharray:190;stroke-dashoffset:190" />
+        <circle cx="100" cy="100" r="16" style="stroke-dasharray:101;stroke-dashoffset:101" />
+        <path d="M100,116 C98,140 102,160 96,180" style="stroke-dasharray:90;stroke-dashoffset:90" />
+        <path d="M99,140 C112,136 122,142 128,152" style="stroke-dasharray:46;stroke-dashoffset:46" />
+        <path d="M98,158 C86,156 76,162 70,172" style="stroke-dasharray:46;stroke-dashoffset:46" />
+      </g>
+    </svg>
+  </div>
+
+  <!-- ============================================================
+       SCENE 2 — the gift card
+       ============================================================ -->
+  <section id="scene-card" class="scene" aria-live="polite">
+    <article class="card">
+
+      <div class="card-header">
+        <span class="card-eyebrow">A little something</span>
+        <svg class="sunflower-mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(45 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(90 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(135 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(180 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(225 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(270 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(315 100 100)" />
+          <circle cx="100" cy="100" r="16" />
+        </svg>
+      </div>
+
+      <h1 class="card-title">Here is your Coconut Ice Cream 🍦</h1>
+
+      <div class="note-section">
+        <div class="note-label-row">
+          <span class="note-label">A note for you</span>
+          <button type="button" class="note-edit-btn" id="note-edit-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+              <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+            </svg>
+            <span id="note-edit-label">Edit</span>
+          </button>
+        </div>
+        <p class="note-body" id="note-body" spellcheck="false">I am sorry for the misunderstanding and for the remark I made that hurt you last night.
+
+As promised, here's your coconut ice cream, along with a few songs I know you like — I hope it makes up for my thoughtless words.
+
+You mean a lot to me, and the last thing I ever want is to be the reason for your hurt.
+
+I really hope you enjoy your ice cream and the music. Do let me know if you want me to add some more songs here.</p>
+      </div>
+
+      <div class="perforation" aria-hidden="true"></div>
+
+      <div class="voucher-section">
+        <div class="voucher-head">
+          <svg class="sunflower-mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" />
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(45 100 100)" />
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(90 100 100)" />
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(135 100 100)" />
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(180 100 100)" />
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(225 100 100)" />
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(270 100 100)" />
+            <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(315 100 100)" />
+            <circle cx="100" cy="100" r="16" />
+          </svg>
+          <span>Your voucher</span>
+        </div>
+
+        <dl class="voucher-grid">
+          <div class="voucher-field">
+            <dt>To</dt>
+            <dd>Muse</dd>
+          </div>
+          <div class="voucher-field">
+            <dt>Amount</dt>
+            <dd>₹500</dd>
+          </div>
+          <div class="voucher-field full">
+            <dt>Voucher code</dt>
+            <dd class="code" id="voucher-code">7100302517086211</dd>
+          </div>
+          <div class="voucher-field">
+            <dt>Pin</dt>
+            <dd id="voucher-pin">403139</dd>
+          </div>
+          <div class="voucher-field">
+            <dt>Redeem at</dt>
+            <dd>Blinkit</dd>
+          </div>
+        </dl>
+
+        <button type="button" class="copy-btn" id="copy-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="9" width="13" height="13" rx="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+          <span id="copy-btn-label">Copy code &amp; pin</span>
+        </button>
+      </div>
+
+      <div class="perforation" aria-hidden="true"></div>
+
+      <div class="player-section">
+        <div class="player-head">
+          <span>A few songs I know you like</span>
+        </div>
+        <ul class="playlist" id="playlist" aria-label="Playlist"></ul>
+      </div>
+
+      <div class="card-footer">
+        <svg class="sunflower-mark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(45 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(90 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(135 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(180 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(225 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(270 100 100)" />
+          <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(315 100 100)" />
+          <circle cx="100" cy="100" r="16" />
+        </svg>
+        <p>made with care, just for you</p>
+      </div>
+
+    </article>
+  </section>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

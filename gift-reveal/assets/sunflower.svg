@@ -1,0 +1,20 @@
+<!-- Standalone reference copy of the sunflower signature mark used throughout the site.
+     The live site draws this inline in index.html (required for the stroke-draw
+     "blooming" animation to work) — this file is kept here purely as a reusable
+     asset, e.g. if you want it as a favicon source, a print asset, etc. -->
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+  <g fill="none" stroke="#C97B4A" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" />
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(45 100 100)" />
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(90 100 100)" />
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(135 100 100)" />
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(180 100 100)" />
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(225 100 100)" />
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(270 100 100)" />
+    <path d="M100,100 C90,78 90,50 100,30 C110,50 110,78 100,100 Z" transform="rotate(315 100 100)" />
+    <circle cx="100" cy="100" r="16" />
+    <path d="M100,116 C98,140 102,160 96,180" />
+    <path d="M99,140 C112,136 122,142 128,152" />
+    <path d="M98,158 C86,156 76,162 70,172" />
+  </g>
+</svg>
