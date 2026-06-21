@@ -50,51 +50,6 @@ const SONGS = [
 })();
 
 /* ============================================================
-   Editable note, with autosave to this browser only
-   ============================================================ */
-
-(function noteEditor() {
-  const noteBody = document.getElementById("note-body");
-  const editBtn = document.getElementById("note-edit-btn");
-  const editLabel = document.getElementById("note-edit-label");
-
-  try {
-    const saved = localStorage.getItem("gift-note-text");
-    if (saved) noteBody.innerText = saved;
-  } catch (e) {
-    /* localStorage unavailable — ignore, default note still shows */
-  }
-
-  let editing = false;
-
-  editBtn.addEventListener("click", () => {
-    editing = !editing;
-    noteBody.setAttribute("contenteditable", editing ? "true" : "false");
-    editLabel.textContent = editing ? "Save" : "Edit";
-
-    if (editing) {
-      noteBody.focus();
-      placeCaretAtEnd(noteBody);
-    } else {
-      try {
-        localStorage.setItem("gift-note-text", noteBody.innerText.trim());
-      } catch (e) {
-        /* ignore */
-      }
-    }
-  });
-
-  function placeCaretAtEnd(el) {
-    const range = document.createRange();
-    range.selectNodeContents(el);
-    range.collapse(false);
-    const sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-  }
-})();
-
-/* ============================================================
    Voucher copy-to-clipboard
    ============================================================ */
 
@@ -150,6 +105,9 @@ const SONGS = [
 
 (function musicPlayer() {
   const playlistEl = document.getElementById("playlist");
+  const vinyl = document.getElementById("vinyl");
+  const nowTitleEl = document.getElementById("vinyl-now-title");
+  const nowArtistEl = document.getElementById("vinyl-now-artist");
   const trackRefs = [];
 
   function escapeHtml(str) {
@@ -163,6 +121,15 @@ const SONGS = [
     const m = Math.floor(seconds / 60);
     const s = Math.floor(seconds % 60).toString().padStart(2, "0");
     return `${m}:${s}`;
+  }
+
+  function setNowPlaying(song) {
+    nowTitleEl.textContent = song.title;
+    nowArtistEl.textContent = song.artist;
+  }
+
+  function setVinylSpinning(isSpinning) {
+    vinyl.classList.toggle("is-spinning", isSpinning);
   }
 
   function buildTrackEl(song) {
@@ -200,7 +167,7 @@ const SONGS = [
     if (isFinite(dur)) refs.progressEl.setAttribute("aria-valuenow", String(Math.round(pct)));
   }
 
-  function togglePlay(i) {
+  function playAt(i) {
     const target = trackRefs[i];
 
     // only one song plays at a time
@@ -211,11 +178,17 @@ const SONGS = [
       }
     });
 
+    target.audio.play().catch(() => {
+      /* playback blocked until a user gesture — the click that got us here counts as one */
+    });
+    target.li.classList.add("is-active");
+    target.li.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  function togglePlay(i) {
+    const target = trackRefs[i];
     if (target.audio.paused) {
-      target.audio.play().catch(() => {
-        /* playback blocked until user gesture — button click already counts as one */
-      });
-      target.li.classList.add("is-active");
+      playAt(i);
     } else {
       target.audio.pause();
     }
@@ -252,17 +225,62 @@ const SONGS = [
       refs.durEl.textContent = formatTime(audio.duration);
     });
     audio.addEventListener("timeupdate", () => updateProgress(refs, audio));
-    audio.addEventListener("play", () => li.classList.add("is-playing"));
-    audio.addEventListener("pause", () => li.classList.remove("is-playing"));
+
+    audio.addEventListener("play", () => {
+      li.classList.add("is-playing");
+      setNowPlaying(song);
+      setVinylSpinning(true);
+    });
+
+    audio.addEventListener("pause", () => {
+      li.classList.remove("is-playing");
+      setVinylSpinning(false);
+    });
+
     audio.addEventListener("ended", () => {
       li.classList.remove("is-playing", "is-active");
       audio.currentTime = 0;
       updateProgress(refs, audio);
+
+      // autoplay into the next track, if there is one
+      const nextIndex = i + 1;
+      if (nextIndex < trackRefs.length) {
+        playAt(nextIndex);
+      }
     });
 
     refs.playBtn.addEventListener("click", () => togglePlay(i));
 
-    refs.progressEl.addEventListener("click", (e) => seek(refs, audio, e.clientX));
+    // drag-to-seek (and tap-to-seek) via pointer events — works for mouse, touch, and pen
+    let dragging = false;
+
+    refs.progressEl.addEventListener("pointerdown", (e) => {
+      dragging = true;
+      li.classList.add("is-dragging");
+      seek(refs, audio, e.clientX);
+      try {
+        refs.progressEl.setPointerCapture(e.pointerId);
+      } catch (err) {
+        /* pointer capture isn't critical — dragging still works via document-level listeners below */
+      }
+    });
+    refs.progressEl.addEventListener("pointermove", (e) => {
+      if (!dragging) return;
+      seek(refs, audio, e.clientX);
+    });
+    const stopDragging = (e) => {
+      if (!dragging) return;
+      dragging = false;
+      li.classList.remove("is-dragging");
+      try {
+        refs.progressEl.releasePointerCapture(e.pointerId);
+      } catch (err) {
+        /* ignore */
+      }
+    };
+    refs.progressEl.addEventListener("pointerup", stopDragging);
+    refs.progressEl.addEventListener("pointercancel", stopDragging);
+
     refs.progressEl.addEventListener("keydown", (e) => {
       if (!isFinite(audio.duration)) return;
       if (e.key === "ArrowRight") audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);

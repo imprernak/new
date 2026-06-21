@@ -119,15 +119,8 @@
       <div class="note-section">
         <div class="note-label-row">
           <span class="note-label">A note for you</span>
-          <button type="button" class="note-edit-btn" id="note-edit-btn">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-              <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-            </svg>
-            <span id="note-edit-label">Edit</span>
-          </button>
         </div>
-        <p class="note-body" id="note-body" spellcheck="false">I am sorry for the misunderstanding and for the remark I made that hurt you last night.
+        <p class="note-body" id="note-body">I am sorry for the misunderstanding and for the remark I made that hurt you last night.
 
 As promised, here's your coconut ice cream, along with a few songs I know you like — I hope it makes up for my thoughtless words.
 
@@ -192,6 +185,45 @@ I really hope you enjoy your ice cream and the music. Do let me know if you want
         <div class="player-head">
           <span>A few songs I know you like</span>
         </div>
+
+        <div class="vinyl-stage">
+          <div class="vinyl" id="vinyl">
+            <div class="vinyl-disc">
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="discGrad" cx="38%" cy="35%" r="75%">
+                    <stop offset="0%" stop-color="#3a2545" />
+                    <stop offset="65%" stop-color="#1c1022" />
+                    <stop offset="100%" stop-color="#0a0510" />
+                  </radialGradient>
+                  <radialGradient id="labelGrad" cx="35%" cy="35%" r="70%">
+                    <stop offset="0%" stop-color="#ffe9a8" />
+                    <stop offset="100%" stop-color="#c97b4a" />
+                  </radialGradient>
+                </defs>
+                <circle cx="60" cy="60" r="58" fill="url(#discGrad)" />
+                <circle cx="60" cy="60" r="50" fill="none" stroke="#00000055" stroke-width="1" />
+                <circle cx="60" cy="60" r="42" fill="none" stroke="#00000055" stroke-width="1" />
+                <circle cx="60" cy="60" r="34" fill="none" stroke="#00000055" stroke-width="1" />
+                <circle cx="60" cy="60" r="22" fill="url(#labelGrad)" />
+                <circle cx="60" cy="60" r="2.4" fill="#1b1023" />
+              </svg>
+            </div>
+            <div class="vinyl-arm" id="vinyl-arm" aria-hidden="true">
+              <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <line x1="100" y1="16" x2="48" y2="46" stroke="#d8cddc" stroke-width="3" stroke-linecap="round" />
+                <circle cx="100" cy="16" r="6" fill="#d8cddc" />
+                <circle cx="48" cy="46" r="4" fill="#f7c948" />
+              </svg>
+            </div>
+          </div>
+          <div class="vinyl-info">
+            <p class="vinyl-now-label">Now playing</p>
+            <p class="vinyl-now-title" id="vinyl-now-title">Tap a song to begin</p>
+            <p class="vinyl-now-artist" id="vinyl-now-artist"></p>
+          </div>
+        </div>
+
         <ul class="playlist" id="playlist" aria-label="Playlist"></ul>
       </div>
 

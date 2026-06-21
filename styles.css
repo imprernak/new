@@ -388,43 +388,12 @@ button {
   font-weight: 600;
 }
 
-.note-edit-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 0.74rem;
-  font-weight: 600;
-  color: var(--amber);
-  padding: 4px 9px;
-  border-radius: 100px;
-  transition: background 0.25s ease;
-}
-
-.note-edit-btn:hover {
-  background: rgba(201, 123, 74, 0.12);
-}
-
-.note-edit-btn svg {
-  width: 13px;
-  height: 13px;
-}
-
 .note-body {
   font-family: var(--font-display);
   font-size: 1.02rem;
   line-height: 1.65;
   color: var(--text-ink);
   white-space: pre-wrap;
-  border-radius: 12px;
-  padding: 2px 2px;
-  transition: background 0.25s ease, box-shadow 0.25s ease;
-}
-
-.note-body[contenteditable="true"] {
-  background: rgba(255, 255, 255, 0.55);
-  box-shadow: 0 0 0 1.5px rgba(201, 123, 74, 0.35);
-  padding: 12px 14px;
-  outline: none;
 }
 
 /* --- perforated divider --- */
@@ -569,6 +538,82 @@ button {
   font-weight: 600;
 }
 
+/* --- vinyl record visual --- */
+
+.vinyl-stage {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 2px 28px 18px;
+}
+
+.vinyl {
+  position: relative;
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
+}
+
+.vinyl-disc {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.45));
+  animation: vinyl-spin 3.2s linear infinite;
+  animation-play-state: paused;
+}
+
+.vinyl.is-spinning .vinyl-disc {
+  animation-play-state: running;
+}
+
+@keyframes vinyl-spin {
+  to { transform: rotate(360deg); }
+}
+
+.vinyl-arm {
+  position: absolute;
+  inset: 0;
+  transform-origin: 83% 13%;
+  transform: rotate(-24deg);
+  transition: transform 0.6s var(--ease-soft);
+}
+
+.vinyl.is-spinning .vinyl-arm {
+  transform: rotate(-3deg);
+}
+
+.vinyl-info {
+  min-width: 0;
+}
+
+.vinyl-now-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-ink-soft);
+  margin-bottom: 3px;
+}
+
+.vinyl-now-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vinyl-now-artist {
+  font-size: 0.8rem;
+  color: var(--text-ink-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
 .playlist {
   list-style: none;
   max-height: 340px;
@@ -686,8 +731,17 @@ button {
   height: 4px;
   border-radius: 4px;
   background: rgba(44, 34, 48, 0.12);
-  cursor: pointer;
+  cursor: grab;
   touch-action: none;
+}
+
+.track-progress::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  bottom: -9px;
+  left: 0;
+  right: 0;
 }
 
 .track-progress-fill {
@@ -715,8 +769,13 @@ button {
 }
 
 .track:hover .track-progress-handle,
-.track.is-active .track-progress-handle {
+.track.is-active .track-progress-handle,
+.track.is-dragging .track-progress-handle {
   opacity: 1;
+}
+
+.track.is-dragging .track-progress {
+  cursor: grabbing;
 }
 
 /* --- card footer --- */
